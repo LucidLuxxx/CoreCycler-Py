@@ -1,4 +1,6 @@
 import configparser
+import os
+import sys
 
 def load_general_config(ui):
     """Load settings from config.ini and update the GUI elements for the [General] section."""
@@ -151,3 +153,17 @@ def apply_general_config(ui):
     # Write the updated configuration back to config.ini
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
+
+def launch_configs_folder():
+    """Open the configs folder in Windows Explorer from the base directory."""
+    try:
+        # Determine the base directory: script dir if uncompiled, exe dir if compiled
+        if getattr(sys, 'frozen', False):
+            base_dir = os.path.dirname(sys.executable)  # Compiled .exe directory
+        else:
+            base_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
+        
+        configs_path = os.path.join(base_dir, 'configs')
+        os.startfile(configs_path)
+    except Exception as e:
+        print(f"Error opening configs folder: {e}")

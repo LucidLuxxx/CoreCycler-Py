@@ -2,6 +2,8 @@ import sys
 import os
 import shutil
 import subprocess
+import start
+import menu_bar
 from PyQt6 import QtWidgets
 from mainwindow import Ui_MainWindow
 from general import load_general_config, apply_general_config
@@ -17,6 +19,7 @@ from linpack import load_linpack_config, apply_linpack_config
 from zentimings import launch_zentimings
 from functools import partial
 from reset import reset_config
+from general import launch_configs_folder
 from tools import (
     launch_boost_tester,
     launch_pbo2_tuner,
@@ -33,7 +36,7 @@ if sys.platform == "win32":
     hWnd = kernel32.GetConsoleWindow()
     if hWnd:
         user32.ShowWindow(hWnd, 0)  # 0 is SW_HIDE
-import start
+
 
 # Set working directory to the .exe's location when compiled
 if getattr(sys, 'frozen', False):
@@ -84,7 +87,8 @@ if __name__ == "__main__":
     ui.enablePerformanceCounters_pushButton.clicked.connect(launch_enable_performance_counters)
     ui.helpers_pushButton.clicked.connect(open_helpers_folder)
     ui.zenTimings_pushButton.clicked.connect(launch_zentimings)
-
+    menu_bar.setup_menu_connections(ui)
+    ui.configsFolder_toolButton.clicked.connect(launch_configs_folder)
     ui.start_test_pushButton.clicked.connect(lambda: start.run_corecycler(MainWindow))
     
     MainWindow.show()
