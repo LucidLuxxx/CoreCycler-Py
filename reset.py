@@ -1,10 +1,8 @@
 import os
 import shutil
-import subprocess
-import sys
 from PyQt6 import QtWidgets
 
-def reset_config():
+def reset_config(ui, load_all_configs):
     reply = QtWidgets.QMessageBox.question(
         None,
         "Confirm Reset",
@@ -27,28 +25,10 @@ def reset_config():
         
         try:
             shutil.copyfile(default_config_path, config_path)
+            load_all_configs(ui)
         except Exception as e:
             QtWidgets.QMessageBox.critical(
                 None,
                 "Error",
-                f"Failed to copy default config: {e}"
+                f"Failed to reset config: {e}"
             )
-            return
-        
-        try:
-            # Restart the application based on whether it's frozen or a script
-            if getattr(sys, 'frozen', False):
-                # Frozen executable: run the executable
-                subprocess.Popen([sys.executable], cwd=working_dir)
-            else:
-                # Python script: run the interpreter with the current script
-                subprocess.Popen([sys.executable, sys.argv[0]], cwd=working_dir)
-        except Exception as e:
-            QtWidgets.QMessageBox.critical(
-                None,
-                "Error",
-                f"Failed to restart application: {e}"
-            )
-            return
-        
-        QtWidgets.QApplication.quit()

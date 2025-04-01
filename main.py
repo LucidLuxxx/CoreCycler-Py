@@ -14,6 +14,7 @@ from update import load_update_config, apply_update_config
 from logging_config import load_logging_config, apply_logging_config
 from debugging import load_debug_config, apply_debug_config
 from linpack import load_linpack_config, apply_linpack_config
+from functools import partial
 from reset import reset_config
 from tools import (
     launch_boost_tester,
@@ -72,7 +73,7 @@ if __name__ == "__main__":
     
     load_all_configs(ui)
     ui.apply_config_pushButton.clicked.connect(lambda: apply_all_configs(ui))
-    ui.reset_config_pushButton.clicked.connect(reset_config)
+    ui.reset_config_pushButton.clicked.connect(partial(reset_config, ui, load_all_configs))
 
     ui.boostTester_pushButton.clicked.connect(launch_boost_tester)
     ui.pbo2Tuner_pushButton.clicked.connect(launch_pbo2_tuner)
