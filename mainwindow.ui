@@ -1815,7 +1815,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="zenTimings_pushButton">
          <property name="text">
           <string>ZenTimings</string>
          </property>
@@ -2150,7 +2150,7 @@
       <x>10</x>
       <y>600</y>
       <width>481</width>
-      <height>41</height>
+      <height>42</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_9">

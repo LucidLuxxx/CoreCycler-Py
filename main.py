@@ -14,6 +14,7 @@ from update import load_update_config, apply_update_config
 from logging_config import load_logging_config, apply_logging_config
 from debugging import load_debug_config, apply_debug_config
 from linpack import load_linpack_config, apply_linpack_config
+from zentimings import launch_zentimings
 from functools import partial
 from reset import reset_config
 from tools import (
@@ -82,6 +83,7 @@ if __name__ == "__main__":
     ui.coreTunerX_pushButton.clicked.connect(launch_core_tuner_x)
     ui.enablePerformanceCounters_pushButton.clicked.connect(launch_enable_performance_counters)
     ui.helpers_pushButton.clicked.connect(open_helpers_folder)
+    ui.zenTimings_pushButton.clicked.connect(launch_zentimings)
 
     ui.start_test_pushButton.clicked.connect(lambda: start.run_corecycler(MainWindow))
     
