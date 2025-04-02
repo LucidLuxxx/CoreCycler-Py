@@ -1,8 +1,18 @@
 import configparser
 import os
 import sys
-import shutil  # Add this import
+import shutil
 from PyQt6 import QtWidgets
+# Note: We'll need to import other config functions here since load_all_configs uses them
+from automaticTestMode import load_automatic_test_mode_config, apply_automatic_test_mode_config
+from prime95 import load_prime95_config, apply_prime95_config
+from prime95Custom import load_prime95_custom_config, apply_prime95_custom_config
+from aida64 import load_aida64_config, apply_aida64_config
+from ycruncher import load_ycruncher_config, apply_ycruncher_config
+from update import load_update_config, apply_update_config
+from logging_config import load_logging_config, apply_logging_config
+from debugging import load_debug_config, apply_debug_config
+from linpack import load_linpack_config, apply_linpack_config
 
 def load_general_config(ui):
     """Load settings from config.ini and update the GUI elements for the [General] section."""
@@ -53,7 +63,7 @@ def load_general_config(ui):
         
         # Core Test Order (Combobox and Line Edit)
         coretestorder = general.get('coretestorder', 'Default')
-        predefined_orders = ['Default', 'Alternate', 'Random', 'Sequential', 'Custom']  # Fixed typo: removed space in ' Default'
+        predefined_orders = ['Default', 'Alternate', 'Random', 'Sequential', 'Custom']
         if coretestorder in predefined_orders:
             ui.general_coreTestOrder_comboBox.setCurrentText(coretestorder)
             if coretestorder == 'Custom':
@@ -156,8 +166,8 @@ def apply_general_config(ui):
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
 
-def launch_configs_folder():
-    """Open the configs folder in Windows Explorer from the base directory."""
+def launch_configs_folder(ui):
+    """Open a file dialog to select a config file from the configs folder and update the GUI."""
     try:
         # Determine the base directory: script dir if uncompiled, exe dir if compiled
         if getattr(sys, 'frozen', False):
@@ -166,9 +176,42 @@ def launch_configs_folder():
             base_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
         
         configs_path = os.path.join(base_dir, 'configs')
-        os.startfile(configs_path)
+        
+        # Ensure the configs folder exists
+        if not os.path.exists(configs_path):
+            os.makedirs(configs_path)
+        
+        # Open a file dialog to select a .ini file
+        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(
+            ui.centralwidget,  # Parent widget
+            "Select Config File",
+            configs_path,  # Default directory
+            "Config Files (*.ini);;All Files (*)"  # File filter
+        )
+        
+        if file_name:
+            # Get the relative path from the base directory
+            relative_path = os.path.relpath(file_name, base_dir).replace(os.sep, '/')
+            
+            # Update the GUI elements
+            ui.general_useConfigFile_lineEdit.setText(relative_path)
+            ui.general_useConfigFile_checkBox.setChecked(True)
+            
+            # Update the main config.ini to point to the selected config file
+            config = configparser.ConfigParser()
+            config.read(os.path.join(base_dir, 'config.ini'))
+            if 'General' not in config:
+                config['General'] = {}
+            config['General']['useconfigfile'] = relative_path
+            with open(os.path.join(base_dir, 'config.ini'), 'w') as configfile:
+                config.write(configfile)
+            
+            # Reload all configs to refresh the GUI
+            load_all_configs(ui)
+            
     except Exception as e:
-        print(f"Error opening configs folder: {e}")
+        print(f"Error selecting config file: {e}")
+        QtWidgets.QMessageBox.critical(ui.centralwidget, "Error", f"Failed to select config file: {str(e)}")
 
 def save_config_to_file(ui):
     """Save the current config.ini settings to a new file in the configs folder."""
@@ -222,5 +265,32 @@ def save_config_to_file(ui):
             
     except Exception as e:
         print(f"Error saving config file: {str(e)}")
-        # Optionally, show an error message in the GUI
         QtWidgets.QMessageBox.critical(ui.centralwidget, "Error", f"Failed to save config file: {str(e)}")
+
+# Moved from main.py
+def load_all_configs(ui):
+    """Load all settings at startup."""
+    load_general_config(ui)
+    load_automatic_test_mode_config(ui)
+    load_prime95_config(ui)
+    load_prime95_custom_config(ui)
+    load_aida64_config(ui)
+    load_ycruncher_config(ui)
+    load_update_config(ui)
+    load_logging_config(ui)
+    load_debug_config(ui)
+    load_linpack_config(ui)
+
+# Moved from main.py
+def apply_all_configs(ui):
+    """Apply all settings when Apply is clicked."""
+    apply_general_config(ui)
+    apply_automatic_test_mode_config(ui)
+    apply_prime95_config(ui)
+    apply_prime95_custom_config(ui)
+    apply_aida64_config(ui)
+    apply_ycruncher_config(ui)
+    apply_update_config(ui)
+    apply_logging_config(ui)
+    apply_debug_config(ui)
+    apply_linpack_config(ui)

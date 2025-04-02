@@ -6,16 +6,7 @@ import start
 import menu_bar
 from PyQt6 import QtWidgets
 from mainwindow import Ui_MainWindow
-from general import load_general_config, apply_general_config, launch_configs_folder, save_config_to_file  # Import save_config_to_file
-from automaticTestMode import load_automatic_test_mode_config, apply_automatic_test_mode_config
-from prime95 import load_prime95_config, apply_prime95_config
-from prime95Custom import load_prime95_custom_config, apply_prime95_custom_config
-from aida64 import load_aida64_config, apply_aida64_config
-from ycruncher import load_ycruncher_config, apply_ycruncher_config
-from update import load_update_config, apply_update_config
-from logging_config import load_logging_config, apply_logging_config
-from debugging import load_debug_config, apply_debug_config
-from linpack import load_linpack_config, apply_linpack_config
+from general import load_general_config, apply_general_config, launch_configs_folder, save_config_to_file, load_all_configs, apply_all_configs
 from zentimings import launch_zentimings
 from functools import partial
 from reset import reset_config
@@ -28,6 +19,7 @@ from tools import (
     launch_enable_performance_counters,
     open_helpers_folder
 )
+
 if sys.platform == "win32":
     import ctypes
     kernel32 = ctypes.WinDLL('kernel32')
@@ -40,32 +32,6 @@ if sys.platform == "win32":
 if getattr(sys, 'frozen', False):
     exe_dir = os.path.dirname(sys.executable)
     os.chdir(exe_dir)
-
-# Load all settings at startup
-def load_all_configs(ui):
-    load_general_config(ui)
-    load_automatic_test_mode_config(ui)
-    load_prime95_config(ui)
-    load_prime95_custom_config(ui)
-    load_aida64_config(ui)
-    load_ycruncher_config(ui)
-    load_update_config(ui)
-    load_logging_config(ui)
-    load_debug_config(ui)
-    load_linpack_config(ui)
-
-# Apply all settings when Apply is clicked
-def apply_all_configs(ui):
-    apply_general_config(ui)
-    apply_automatic_test_mode_config(ui)
-    apply_prime95_config(ui)
-    apply_prime95_custom_config(ui)
-    apply_aida64_config(ui)
-    apply_ycruncher_config(ui)
-    apply_update_config(ui)
-    apply_logging_config(ui)
-    apply_debug_config(ui)
-    apply_linpack_config(ui)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
@@ -86,7 +52,7 @@ if __name__ == "__main__":
     ui.helpers_pushButton.clicked.connect(open_helpers_folder)
     ui.zenTimings_pushButton.clicked.connect(launch_zentimings)
     menu_bar.setup_menu_connections(ui)
-    ui.configsFolder_toolButton.clicked.connect(launch_configs_folder)
+    ui.configsFolder_toolButton.clicked.connect(lambda: launch_configs_folder(ui))
     ui.start_test_pushButton.clicked.connect(lambda: start.run_corecycler(MainWindow))
     
     MainWindow.show()

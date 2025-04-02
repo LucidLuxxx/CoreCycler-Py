@@ -213,6 +213,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="saveConfig_pushButton">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Save current config to the configs folder. Make sure you apply config before saving.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;CoreCycler uses a config.ini file, which is located in the base directory. The configs folder has pre-made config files that CoreCycler can use for easy and fast access to different testing configurations. The &amp;quot;Save Config&amp;quot; button will take the current config.ini file and save it to the configs folder with a name that you assign to the file. If you change any settings, make sure you press the Apply button before you press Save Config, otherwise the config.ini file will not have the settings you selected. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string>Save Config</string>
          </property>

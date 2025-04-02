@@ -1055,6 +1055,8 @@ class Ui_MainWindow(object):
         self.general_useConfigFile_checkBox.setText(_translate("MainWindow", "Use Config File"))
         self.general_useConfigFile_lineEdit.setPlaceholderText(_translate("MainWindow", "configs\\Prime95.1344K.AVX2.config.ini"))
         self.configsFolder_toolButton.setText(_translate("MainWindow", "..."))
+        self.saveConfig_pushButton.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:8pt;\">Save current config to the configs folder. Make sure you apply config before saving.</span></p></body></html>"))
+        self.saveConfig_pushButton.setWhatsThis(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:8pt;\">CoreCycler uses a config.ini file, which is located in the base directory. The configs folder has pre-made config files that CoreCycler can use for easy and fast access to different testing configurations. The &quot;Save Config&quot; button will take the current config.ini file and save it to the configs folder with a name that you assign to the file. If you change any settings, make sure you press the Apply button before you press Save Config, otherwise the config.ini file will not have the settings you selected. </span></p></body></html>"))
         self.saveConfig_pushButton.setText(_translate("MainWindow", "Save Config"))
         self.general_runtimePerCore_label.setText(_translate("MainWindow", "Runtime Per Core"))
         self.general_runtimePerCore_lineEdit.setPlaceholderText(_translate("MainWindow", "90s or 1.5m or 1h45m"))
