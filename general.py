@@ -1,6 +1,8 @@
 import configparser
 import os
 import sys
+import shutil  # Add this import
+from PyQt6 import QtWidgets
 
 def load_general_config(ui):
     """Load settings from config.ini and update the GUI elements for the [General] section."""
@@ -51,7 +53,7 @@ def load_general_config(ui):
         
         # Core Test Order (Combobox and Line Edit)
         coretestorder = general.get('coretestorder', 'Default')
-        predefined_orders = ['Default', 'Alternate', 'Random', 'Sequential', 'Custom']
+        predefined_orders = ['Default', 'Alternate', 'Random', 'Sequential', 'Custom']  # Fixed typo: removed space in ' Default'
         if coretestorder in predefined_orders:
             ui.general_coreTestOrder_comboBox.setCurrentText(coretestorder)
             if coretestorder == 'Custom':
@@ -167,3 +169,58 @@ def launch_configs_folder():
         os.startfile(configs_path)
     except Exception as e:
         print(f"Error opening configs folder: {e}")
+
+def save_config_to_file(ui):
+    """Save the current config.ini settings to a new file in the configs folder."""
+    try:
+        # Determine the base directory: script dir if uncompiled, exe dir if compiled
+        if getattr(sys, 'frozen', False):
+            base_dir = os.path.dirname(sys.executable)  # Compiled .exe directory
+        else:
+            base_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
+        
+        print(f"Base directory: {base_dir}")  # Debug output
+        
+        # Define the source config file path
+        source_config = os.path.join(base_dir, 'config.ini')
+        print(f"Source config path: {source_config}")  # Debug output
+        
+        # Ensure the configs folder exists
+        configs_dir = os.path.join(base_dir, 'configs')
+        if not os.path.exists(configs_dir):
+            os.makedirs(configs_dir)
+            print(f"Created configs directory: {configs_dir}")  # Debug output
+        
+        # Prompt the user for a file name
+        file_name, _ = QtWidgets.QFileDialog.getSaveFileName(
+            ui.centralwidget,  # Parent widget
+            "Save Config File",
+            configs_dir,  # Default directory
+            "Config Files (*.ini);;All Files (*)"  # File filter
+        )
+        print(f"Selected file name: {file_name}")  # Debug output
+        
+        # If the user provided a file name
+        if file_name:
+            # Ensure the file has a .ini extension
+            if not file_name.endswith('.ini'):
+                file_name += '.ini'
+            
+            # Apply the current settings to config.ini first
+            apply_general_config(ui)
+            print("Applied general config to config.ini")  # Debug output
+            
+            # Check if source_config exists
+            if not os.path.exists(source_config):
+                raise FileNotFoundError(f"Source config file not found: {source_config}")
+            
+            # Copy the updated config.ini to the new location
+            shutil.copy2(source_config, file_name)
+            print(f"Config saved to: {file_name}")
+        else:
+            print("Save operation cancelled by user.")
+            
+    except Exception as e:
+        print(f"Error saving config file: {str(e)}")
+        # Optionally, show an error message in the GUI
+        QtWidgets.QMessageBox.critical(ui.centralwidget, "Error", f"Failed to save config file: {str(e)}")

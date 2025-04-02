@@ -6,7 +6,7 @@ import start
 import menu_bar
 from PyQt6 import QtWidgets
 from mainwindow import Ui_MainWindow
-from general import load_general_config, apply_general_config
+from general import load_general_config, apply_general_config, launch_configs_folder, save_config_to_file  # Import save_config_to_file
 from automaticTestMode import load_automatic_test_mode_config, apply_automatic_test_mode_config
 from prime95 import load_prime95_config, apply_prime95_config
 from prime95Custom import load_prime95_custom_config, apply_prime95_custom_config
@@ -19,7 +19,6 @@ from linpack import load_linpack_config, apply_linpack_config
 from zentimings import launch_zentimings
 from functools import partial
 from reset import reset_config
-from general import launch_configs_folder
 from tools import (
     launch_boost_tester,
     launch_pbo2_tuner,
@@ -36,7 +35,6 @@ if sys.platform == "win32":
     hWnd = kernel32.GetConsoleWindow()
     if hWnd:
         user32.ShowWindow(hWnd, 0)  # 0 is SW_HIDE
-
 
 # Set working directory to the .exe's location when compiled
 if getattr(sys, 'frozen', False):
@@ -78,7 +76,7 @@ if __name__ == "__main__":
     load_all_configs(ui)
     ui.apply_config_pushButton.clicked.connect(lambda: apply_all_configs(ui))
     ui.reset_config_pushButton.clicked.connect(partial(reset_config, ui, load_all_configs))
-
+    ui.saveConfig_pushButton.clicked.connect(lambda: save_config_to_file(ui))
     ui.boostTester_pushButton.clicked.connect(launch_boost_tester)
     ui.pbo2Tuner_pushButton.clicked.connect(launch_pbo2_tuner)
     ui.intelVoltageControl_pushButton.clicked.connect(launch_intel_voltage_control)
