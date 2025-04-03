@@ -25,7 +25,8 @@ def reset_config(ui, load_all_configs):
         
         try:
             shutil.copyfile(default_config_path, config_path)
-            load_all_configs(ui)
+            load_all_configs(ui)  # Refresh the GUI with default settings
+            ui.general_useConfigFile_lineEdit.clear()  # Explicitly clear the config file name
         except Exception as e:
             QtWidgets.QMessageBox.critical(
                 None,

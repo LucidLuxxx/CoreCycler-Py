@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>icon.ico</normaloff>icon.ico</iconset>
+    <normaloff>C:/Users/joshu/.designer/backup/icon.ico</normaloff>C:/Users/joshu/.designer/backup/icon.ico</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -206,29 +206,19 @@
        <rect>
         <x>10</x>
         <y>170</y>
-        <width>461</width>
+        <width>469</width>
         <height>31</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QCheckBox" name="general_useConfigFile_checkBox">
-         <property name="font">
-          <font>
-           <pointsize>9</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Use a pre-defined config file. This is useful for quickly switching between various configs. There are multiple pre-defined configs in the configs folder.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="text">
-          <string>Use Config File</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QLineEdit" name="general_useConfigFile_lineEdit">
+         <property name="minimumSize">
+          <size>
+           <width>280</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
            <width>220</width>
@@ -236,10 +226,13 @@
           </size>
          </property>
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Type in the name of the config file you wish to use. Make sure to include the configs folder before the name of the file. For example: &lt;/p&gt;&lt;p align=&quot;center&quot;&gt;configs\quick-initial-test.yCruncher.config.ini&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;When a custom config file is loaded, the name of the config file will be displayed here.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Press &amp;quot;Load Config&amp;quot; to use some pre-made config files or choose your own settings and press &amp;quot;Save Config&amp;quot; to save your own config file to be loaded at any time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
          </property>
          <property name="placeholderText">
-          <string>configs\Prime95.1344K.AVX2.config.ini</string>
+          <string>Config File Name</string>
          </property>
         </widget>
        </item>
@@ -247,20 +240,32 @@
         <widget class="QToolButton" name="configsFolder_toolButton">
          <property name="minimumSize">
           <size>
-           <width>35</width>
+           <width>75</width>
            <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>75</width>
+           <height>16777215</height>
           </size>
          </property>
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Open the configs folder and allows you to easily select a pre-defined config file to use for testing. When a config file is selected, the Use Config File checkbox is automatically selected and the config file is ready to be used.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
-          <string>...</string>
+          <string>Load Config</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="saveConfig_pushButton">
+         <property name="maximumSize">
+          <size>
+           <width>75</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Allows you to save the current settings to a config file. Select the settings you wish to use, click the Apply button, then Save Config. This allows you to create your own custom config files to be easily accessed at any time. If you do not click Apply before saving, the custom config file will not have the correct settings. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>

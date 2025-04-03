@@ -51,10 +51,6 @@ def load_general_config(ui):
         ui.general_beepOnError_checkBox.setChecked(general.get('beeponerror', '0') == '1')
         ui.general_flashOnError_checkBox.setChecked(general.get('flashonerror', '0') == '1')
         
-        # Use Config File (Checkbox and Line Edit)
-        useconfigfile = general.get('useconfigfile', '')
-        ui.general_useConfigFile_lineEdit.setText(useconfigfile)
-        ui.general_useConfigFile_checkBox.setChecked(bool(useconfigfile))  # Check if non-empty
         
         # Core Test Order (Combobox and Line Edit)
         coretestorder = general.get('coretestorder', 'Default')
@@ -95,7 +91,6 @@ def load_general_config(ui):
         ui.general_stressTestProgram_radioButton_prime95.setChecked(True)
         ui.general_stopOnError_checkBox.setChecked(False)
         ui.general_runtimePerCore_checkBox_auto.setChecked(True)
-        ui.general_useConfigFile_checkBox.setChecked(False)
         ui.general_useConfigFile_lineEdit.setText('')
 
 def apply_general_config(ui):
@@ -130,12 +125,6 @@ def apply_general_config(ui):
     general['treatwheawarningaserror'] = '1' if ui.general_treatWheaWarningAsError_checkBox.isChecked() else '0'
     general['beeponerror'] = '1' if ui.general_beepOnError_checkBox.isChecked() else '0'
     general['flashonerror'] = '1' if ui.general_flashOnError_checkBox.isChecked() else '0'
-    
-    # Use Config File (Checkbox and Line Edit)
-    if ui.general_useConfigFile_checkBox.isChecked():
-        general['useconfigfile'] = ui.general_useConfigFile_lineEdit.text()
-    else:
-        general['useconfigfile'] = ''
     
     # Core Test Order (Combobox and Line Edit)
     if ui.general_coreTestOrder_comboBox.currentText() == 'Custom':
@@ -175,7 +164,6 @@ def launch_configs_folder(ui):
         if file_name:
             relative_path = os.path.relpath(file_name, base_dir).replace(os.sep, '/')
             ui.general_useConfigFile_lineEdit.setText(relative_path)
-            ui.general_useConfigFile_checkBox.setChecked(True)
             
             # Step 1: Load default.config.ini into config.ini
             default_config_path = os.path.join(base_dir, 'configs', 'default.config.ini')
@@ -198,15 +186,12 @@ def launch_configs_folder(ui):
                 for key, value in custom_config[section].items():
                     main_config[section][key] = value
             
-            # Step 3: Explicitly set useconfigfile in [General]
-            if 'General' not in main_config:
-                main_config['General'] = {}
-            main_config['General']['useconfigfile'] = relative_path
+            # Removed: main_config['General']['useconfigfile'] = relative_path
             
             with open(config_path, 'w') as configfile:
                 main_config.write(configfile)
             
-            # Step 4: Refresh GUI with the combined settings
+            # Step 3: Refresh GUI with the combined settings
             load_all_configs(ui)
         
     except Exception as e:

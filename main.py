@@ -68,14 +68,16 @@ def handle_config_file_checkbox(ui, state):
                 for key, value in custom_config[section].items():
                     main_config[section][key] = value
             
-            main_config['General']['useconfigfile'] = ui.general_useConfigFile_lineEdit.text()
+            # Do NOT set useconfigfile in config.ini
+            # Removed: main_config['General']['useconfigfile'] = ui.general_useConfigFile_lineEdit.text()
+            
             with open(config_path, 'w') as configfile:
                 main_config.write(configfile)
             
             load_all_configs(ui)
         else:
             QtWidgets.QMessageBox.warning(None, "Warning", f"Config file not found at {custom_config_path}.")
-            ui.general_useConfigFile_checkBox.setChecked(False)
+            
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
@@ -98,9 +100,6 @@ if __name__ == "__main__":
     menu_bar.setup_menu_connections(ui)
     ui.configsFolder_toolButton.clicked.connect(lambda: launch_configs_folder(ui))
     ui.start_test_pushButton.clicked.connect(lambda: start.run_corecycler(MainWindow))
-    
-    # Add the checkbox state change connection here
-    ui.general_useConfigFile_checkBox.stateChanged.connect(lambda state: handle_config_file_checkbox(ui, state))
     
     MainWindow.show()
     sys.exit(app.exec())
