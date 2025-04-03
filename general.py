@@ -19,7 +19,6 @@ def load_general_config(ui):
     config = configparser.ConfigParser()
     config.read('config.ini')
     
-    # Check if the [General] section exists
     if 'General' in config:
         general = config['General']
         
@@ -54,12 +53,8 @@ def load_general_config(ui):
         
         # Use Config File (Checkbox and Line Edit)
         useconfigfile = general.get('useconfigfile', '')
-        if useconfigfile:
-            ui.general_useConfigFile_checkBox.setChecked(True)
-            ui.general_useConfigFile_lineEdit.setText(useconfigfile)
-        else:
-            ui.general_useConfigFile_checkBox.setChecked(False)
-            ui.general_useConfigFile_lineEdit.clear()
+        ui.general_useConfigFile_lineEdit.setText(useconfigfile)
+        ui.general_useConfigFile_checkBox.setChecked(bool(useconfigfile))  # Check if non-empty
         
         # Core Test Order (Combobox and Line Edit)
         coretestorder = general.get('coretestorder', 'Default')
@@ -80,7 +75,6 @@ def load_general_config(ui):
             ui.general_delayBetweenCores_spinBox.setValue(int(general.get('delaybetweencores', '15')))
             ui.general_numberOfThreads_spinBox.setValue(int(general.get('numberofthreads', '1')))
         except ValueError:
-            # Set defaults if conversion fails
             ui.general_maxIterations_spinBox.setValue(1)
             ui.general_delayBetweenCores_spinBox.setValue(15)
             ui.general_numberOfThreads_spinBox.setValue(1)
@@ -101,7 +95,8 @@ def load_general_config(ui):
         ui.general_stressTestProgram_radioButton_prime95.setChecked(True)
         ui.general_stopOnError_checkBox.setChecked(False)
         ui.general_runtimePerCore_checkBox_auto.setChecked(True)
-        ui.general_runtimePerCore_lineEdit.setText('')
+        ui.general_useConfigFile_checkBox.setChecked(False)
+        ui.general_useConfigFile_lineEdit.setText('')
 
 def apply_general_config(ui):
     """Update the [General] section in config.ini based on current GUI settings."""
@@ -167,50 +162,54 @@ def apply_general_config(ui):
         config.write(configfile)
 
 def launch_configs_folder(ui):
-    """Open a file dialog to select a config file from the configs folder and update the GUI."""
     try:
-        # Determine the base directory: script dir if uncompiled, exe dir if compiled
-        if getattr(sys, 'frozen', False):
-            base_dir = os.path.dirname(sys.executable)  # Compiled .exe directory
-        else:
-            base_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
-        
+        base_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__))
         configs_path = os.path.join(base_dir, 'configs')
-        
-        # Ensure the configs folder exists
         if not os.path.exists(configs_path):
             os.makedirs(configs_path)
         
-        # Open a file dialog to select a .ini file
         file_name, _ = QtWidgets.QFileDialog.getOpenFileName(
-            ui.centralwidget,  # Parent widget
-            "Select Config File",
-            configs_path,  # Default directory
-            "Config Files (*.ini);;All Files (*)"  # File filter
+            ui.centralwidget, "Select Config File", configs_path, "Config Files (*.ini);;All Files (*)"
         )
         
         if file_name:
-            # Get the relative path from the base directory
             relative_path = os.path.relpath(file_name, base_dir).replace(os.sep, '/')
-            
-            # Update the GUI elements
             ui.general_useConfigFile_lineEdit.setText(relative_path)
             ui.general_useConfigFile_checkBox.setChecked(True)
             
-            # Update the main config.ini to point to the selected config file
-            config = configparser.ConfigParser()
-            config.read(os.path.join(base_dir, 'config.ini'))
-            if 'General' not in config:
-                config['General'] = {}
-            config['General']['useconfigfile'] = relative_path
-            with open(os.path.join(base_dir, 'config.ini'), 'w') as configfile:
-                config.write(configfile)
+            # Step 1: Load default.config.ini into config.ini
+            default_config_path = os.path.join(base_dir, 'configs', 'default.config.ini')
+            config_path = os.path.join(base_dir, 'config.ini')
+            if os.path.exists(default_config_path):
+                shutil.copyfile(default_config_path, config_path)
+            else:
+                QtWidgets.QMessageBox.warning(None, "Warning", f"Default config file not found at {default_config_path}.")
+                return
             
-            # Reload all configs to refresh the GUI
+            # Step 2: Overlay the custom config file settings
+            custom_config = configparser.ConfigParser()
+            custom_config.read(file_name)
+            main_config = configparser.ConfigParser()
+            main_config.read(config_path)
+            
+            for section in custom_config.sections():
+                if section not in main_config:
+                    main_config[section] = {}
+                for key, value in custom_config[section].items():
+                    main_config[section][key] = value
+            
+            # Step 3: Explicitly set useconfigfile in [General]
+            if 'General' not in main_config:
+                main_config['General'] = {}
+            main_config['General']['useconfigfile'] = relative_path
+            
+            with open(config_path, 'w') as configfile:
+                main_config.write(configfile)
+            
+            # Step 4: Refresh GUI with the combined settings
             load_all_configs(ui)
-            
+        
     except Exception as e:
-        print(f"Error selecting config file: {e}")
         QtWidgets.QMessageBox.critical(ui.centralwidget, "Error", f"Failed to select config file: {str(e)}")
 
 def save_config_to_file(ui):
