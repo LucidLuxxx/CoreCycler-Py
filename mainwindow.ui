@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>C:/Users/joshu/.designer/backup/icon.ico</normaloff>C:/Users/joshu/.designer/backup/icon.ico</iconset>
+    <normaloff>icon.ico</normaloff>icon.ico</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -661,7 +661,7 @@
         <x>140</x>
         <y>240</y>
         <width>201</width>
-        <height>52</height>
+        <height>51</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -680,6 +680,38 @@
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QLabel" name="automaticTestMode_waitBeforeAutomaticResume_label">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>300</y>
+        <width>171</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="whatsThis">
+       <string/>
+      </property>
+      <property name="text">
+       <string>Wait Before Automatic Resume</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="automaticTestMode_waitBeforeAutomaticResume_spinBox">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>300</y>
+        <width>81</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Windows treats crashes or reboots that happen within 120 seconds of the boot as a &amp;quot;failed&amp;quot; boot. To prevent the Windows Recovery Screen from appearing after three of those &amp;quot;failed&amp;quot; boots, the script will wait for this amount of time before resuming the testing process. Set this to 0 if you don't care about that and want to resume immediately&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Default: 120&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="maximum">
+       <number>600</number>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="prime95_tab">
@@ -1778,7 +1810,7 @@
        <rect>
         <x>40</x>
         <y>340</y>
-        <width>167</width>
+        <width>173</width>
         <height>31</height>
        </rect>
       </property>
@@ -1805,7 +1837,7 @@
           <number>1</number>
          </property>
          <property name="maximum">
-          <number>1000</number>
+          <number>10000</number>
          </property>
         </widget>
        </item>

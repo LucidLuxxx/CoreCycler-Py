@@ -1,40 +1,40 @@
 CpuSupportsSSE=1
 CpuSupportsSSE2=1
-CpuSupportsAVX=0
-CpuSupportsAVX2=0
-CpuSupportsFMA3=0
+CpuSupportsAVX=1
+CpuSupportsAVX2=1
+CpuSupportsFMA3=1
 CpuSupportsAVX512F=0
 NumWorkers=1
 NumCores=1
 CoresPerTest=1
-WorkingDir=F:\Github\CoreCycler-Py
+WorkingDir=F:\Github\CoreCycler
 prime.ini=test_programs\p95\prime.txt
-results.txt=logs\Prime95_2025-04-02_22-47-09_SSE_HUGE_FFT_8960K-32768K.log
+results.txt=logs\Prime95_2025-04-03_12-00-03_AVX2_1344-1344_FFT_1344K-1344K.log
 TortureHyperthreading=0
 TortureMem=0
 TortureTime=1
-MinTortureFFT=8960
-MaxTortureFFT=32768
-TortureWeak=1097728
+MinTortureFFT=1344
+MaxTortureFFT=1344
+TortureWeak=1048576
 ResultsFileTimestampInterval=60
 EnableSetAffinity=0
 EnableSetPriority=0
 StressTester=1
 UsePrimenet=0
-ComputerGUID=b42d2deeb28f5a795a7928b3e9b0b85e
+ComputerGUID=0b4432f7b3e466e8f93fb05648dd2630
 
 [Internals]
 V30OptionsConverted=1
-OldCpuSpeed=4875
+OldCpuSpeed=4825
 NewCpuSpeedCount=0
 NewCpuSpeed=0
 WGUID_version=2
 
 [Windows]
 ExitOnX=1
-Left=26
-Top=26
-Right=1466
-Bottom=779
+Left=130
+Top=130
+Right=1570
+Bottom=883
 W1=0 0 1422 336 0 -1 -1 -1 -1
 W2=0 336 1422 673 0 -1 -1 -1 -1
