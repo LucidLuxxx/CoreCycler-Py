@@ -43,6 +43,14 @@ def load_automatic_test_mode_config(ui):
         # Enable Resume After Unexpected Exit (Checkbox)
         enable_resume = atm.get('enableresumeafterunexpectedexit', '0')
         ui.automaticTestMode_enableResumeAfterUnexpectedExit_checkBox.setChecked(enable_resume == '1')
+        
+        # Wait Before Automatic Resume (SpinBox)
+        try:
+            wait_before_resume = int(atm.get('waitbeforeautomaticresume', '120'))
+            ui.automaticTestMode_waitBeforeAutomaticResume_spinBox.setValue(wait_before_resume)
+        except ValueError:
+            ui.automaticTestMode_waitBeforeAutomaticResume_spinBox.setValue(120)  # Default value
+    
     else:
         # If the section is missing, set default values in the GUI
         ui.automaticTestMode_enableAutomaticAdjustment_checkBox.setChecked(False)
@@ -51,6 +59,7 @@ def load_automatic_test_mode_config(ui):
         ui.automaticTestMode_incrementBy_spinBox.setValue(1)
         ui.automaticTestMode_repeatCoreOnError_checkBox.setChecked(False)
         ui.automaticTestMode_enableResumeAfterUnexpectedExit_checkBox.setChecked(False)
+        ui.automaticTestMode_waitBeforeAutomaticResume_spinBox.setValue(120)
 
 def apply_automatic_test_mode_config(ui):
     """
@@ -84,6 +93,9 @@ def apply_automatic_test_mode_config(ui):
     
     # Enable Resume After Unexpected Exit (Checkbox)
     atm['enableresumeafterunexpectedexit'] = '1' if ui.automaticTestMode_enableResumeAfterUnexpectedExit_checkBox.isChecked() else '0'
+    
+    # Wait Before Automatic Resume (SpinBox)
+    atm['waitbeforeautomaticresume'] = str(ui.automaticTestMode_waitBeforeAutomaticResume_spinBox.value())
     
     # Write the updated configuration back to config.ini
     with open('config.ini', 'w') as configfile:

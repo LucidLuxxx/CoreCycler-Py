@@ -33,22 +33,19 @@ if sys.platform == "win32":
 if getattr(sys, 'frozen', False):
     exe_dir = os.path.dirname(sys.executable)
     os.chdir(exe_dir)
+base_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__))
 
-# Add the new function here, after imports and before main block
+# Function to handle config file checkbox (unchanged)
 def handle_config_file_checkbox(ui, state):
     if state == QtCore.Qt.CheckState.Unchecked.value:
-        # Clear the line edit and refresh GUI with current config.ini
         ui.general_useConfigFile_lineEdit.clear()
-        apply_all_configs(ui)  # Ensure current GUI settings are saved
-        load_all_configs(ui)   # Refresh GUI with config.ini
+        apply_all_configs(ui)
+        load_all_configs(ui)
     elif state == QtCore.Qt.CheckState.Checked.value and ui.general_useConfigFile_lineEdit.text():
-        # User manually checked it with text entered
-        base_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__))
         config_path = os.path.join(base_dir, 'config.ini')
         custom_config_path = os.path.join(base_dir, ui.general_useConfigFile_lineEdit.text())
         
         if os.path.exists(custom_config_path):
-            # Load default.config.ini as base
             default_config_path = os.path.join(base_dir, 'configs', 'default.config.ini')
             if os.path.exists(default_config_path):
                 shutil.copyfile(default_config_path, config_path)
@@ -56,7 +53,6 @@ def handle_config_file_checkbox(ui, state):
                 QtWidgets.QMessageBox.warning(None, "Warning", f"Default config file not found at {default_config_path}.")
                 return
             
-            # Overlay custom config
             custom_config = configparser.ConfigParser()
             custom_config.read(custom_config_path)
             main_config = configparser.ConfigParser()
@@ -68,16 +64,30 @@ def handle_config_file_checkbox(ui, state):
                 for key, value in custom_config[section].items():
                     main_config[section][key] = value
             
-            # Do NOT set useconfigfile in config.ini
-            # Removed: main_config['General']['useconfigfile'] = ui.general_useConfigFile_lineEdit.text()
-            
             with open(config_path, 'w') as configfile:
                 main_config.write(configfile)
             
             load_all_configs(ui)
         else:
             QtWidgets.QMessageBox.warning(None, "Warning", f"Config file not found at {custom_config_path}.")
-            
+
+# New function to ensure config.ini exists
+def ensure_config_exists(ui):
+    config_path = os.path.join(base_dir, 'config.ini')
+    default_config_path = os.path.join(base_dir, 'configs', 'default.config.ini')
+    
+    if not os.path.exists(config_path):
+        if os.path.exists(default_config_path):
+            shutil.copyfile(default_config_path, config_path)
+            print(f"Copied default.config.ini to {config_path}")
+        else:
+            QtWidgets.QMessageBox.warning(None, "Warning", f"Default config file not found at {default_config_path}. Creating empty config.ini.")
+            # Create an empty config.ini if default.config.ini is missing
+            with open(config_path, 'w') as configfile:
+                configfile.write('')
+    
+    # Load the settings into the GUI
+    load_all_configs(ui)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
@@ -85,7 +95,10 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     
-    load_all_configs(ui)
+    # Ensure config.ini exists and load settings
+    ensure_config_exists(ui)
+    
+    # Connect signals
     ui.apply_config_pushButton.clicked.connect(lambda: apply_all_configs(ui))
     ui.reset_config_pushButton.clicked.connect(partial(reset_config, ui, load_all_configs))
     ui.saveConfig_pushButton.clicked.connect(lambda: save_config_to_file(ui))
