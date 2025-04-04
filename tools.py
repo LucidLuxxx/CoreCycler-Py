@@ -47,12 +47,34 @@ def launch_core_tuner_x():
     except Exception as e:
         print(f"Error launching CoreTunerX: {e}")
 
+import os
+import ctypes
+import subprocess
+
 def launch_enable_performance_counters():
     """Launch enable_performance_counter.bat from the tools folder with administrator privileges."""
     try:
-        bat_path = os.path.join("tools", "enable_performance_counter.bat")
-        # Use ShellExecuteW with 'runas' to run the batch file as administrator
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", f'/c "{bat_path}"', None, 1)
+        bat_path = os.path.abspath(os.path.join("tools", "enable_performance_counter.bat"))
+        
+        # Verify the batch file exists
+        if not os.path.exists(bat_path):
+            print(f"Batch file not found at: {bat_path}")
+            return
+        
+        # Attempt to run with ShellExecuteW (preferred method for elevation)
+        result = ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", f'/c "{bat_path}"', None, 1)
+        if result <= 32:  # ShellExecuteW returns > 32 on success
+            print(f"ShellExecuteW failed with code {result}. Possible UAC denial or insufficient permissions.")
+        
+    except AttributeError:
+        # Fallback for non-Windows systems or if ctypes fails
+        print("ShellExecuteW not available, attempting subprocess fallback...")
+        try:
+            subprocess.run([bat_path], shell=True, check=True, creationflags=subprocess.CREATE_NEW_CONSOLE)
+        except subprocess.CalledProcessError as e:
+            print(f"Subprocess failed with return code {e.returncode}")
+        except Exception as e:
+            print(f"Fallback error: {e}")
     except Exception as e:
         print(f"Error launching enable_performance_counter.bat: {e}")
 
