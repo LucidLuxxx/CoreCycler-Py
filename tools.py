@@ -24,21 +24,19 @@ def launch_intel_voltage_control():
         print(f"Error launching IntelVoltageControl: {e}")
 
 def launch_apic_ids():
-    """Launch APICID.exe from the tools folder and open APICID.txt after it finishes."""
+    """Launch APICID.exe from the tools folder in a new terminal window without blocking the GUI."""
     try:
-        apicid_exe_path = os.path.join('tools', 'APICID.exe')
-        # Run APICID.exe and wait for it to complete
-        subprocess.run([apicid_exe_path], check=True)
-        apicid_txt_path = os.path.join('tools', 'APICID.txt')
-        # Check if APICID.txt exists, then open it
-        if os.path.exists(apicid_txt_path):
-            os.startfile(apicid_txt_path)
-        else:
-            print("APICID.txt not found")
-    except subprocess.CalledProcessError as e:
-        print(f"APICID.exe failed with return code {e.returncode}")
+        apicid_exe_path = os.path.abspath(os.path.join('tools', 'APICID.exe'))
+        if not os.path.exists(apicid_exe_path):
+            QtWidgets.QMessageBox.critical(None, "Error", f"APICID.exe not found at: {apicid_exe_path}")
+            return
+        
+        subprocess.Popen(['cmd.exe', '/k', f'.\\APICID.exe'],
+                         cwd=os.path.dirname(apicid_exe_path),
+                         creationflags=subprocess.CREATE_NEW_CONSOLE)
+        
     except Exception as e:
-        print(f"Error: {e}")
+        QtWidgets.QMessageBox.critical(None, "Error", f"Failed to launch APICID.exe: {e}")
 
 def launch_core_tuner_x():
     """Launch CoreTunerX.exe from the tools folder."""
