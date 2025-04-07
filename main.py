@@ -89,6 +89,25 @@ def ensure_config_exists(ui):
     # Load the settings into the GUI
     load_all_configs(ui)
 
+# New function to open the logs folder
+def open_logs_folder(ui):
+    """
+    Open the 'logs' folder located in the base directory.
+    """
+    logs_folder = os.path.join(base_dir, 'logs')
+    
+    # Ensure the logs folder exists (create it if it doesn't)
+    if not os.path.exists(logs_folder):
+        os.makedirs(logs_folder)
+    
+    # Open the folder using the appropriate command for the OS
+    if sys.platform == "win32":
+        subprocess.Popen(['explorer', logs_folder])
+    elif sys.platform == "darwin":
+        subprocess.Popen(['open', logs_folder])
+    else:
+        subprocess.Popen(['xdg-open', logs_folder])
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
@@ -113,6 +132,7 @@ if __name__ == "__main__":
     menu_bar.setup_menu_connections(ui)
     ui.configsFolder_toolButton.clicked.connect(lambda: launch_configs_folder(ui))
     ui.start_test_pushButton.clicked.connect(lambda: start.run_corecycler(MainWindow))
+    ui.main_logsFolder_toolButton.clicked.connect(lambda: open_logs_folder(ui))  # Connect the logs button
     
     MainWindow.show()
     sys.exit(app.exec())

@@ -2036,7 +2036,7 @@
        <rect>
         <x>50</x>
         <y>70</y>
-        <width>381</width>
+        <width>361</width>
         <height>31</height>
        </rect>
       </property>
@@ -2111,6 +2111,19 @@
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QToolButton" name="main_logsFolder_toolButton">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>100</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Logs</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="debugging_tab">
