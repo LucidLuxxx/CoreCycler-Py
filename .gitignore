@@ -19,3 +19,8 @@ test_programs/linpack/**/*.ini
 tools/results.txt
 tools/PBO2Tuner/ZenStates-Core.sys
 logs
+dist
+build
+CoreCycler.exe
+CoreCycler.spec
+_pycache_
