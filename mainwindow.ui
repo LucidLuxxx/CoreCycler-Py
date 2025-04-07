@@ -51,7 +51,7 @@
      <enum>QTabWidget::TabShape::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="movable">
      <bool>true</bool>
@@ -897,51 +897,11 @@
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QWidget" name="gridLayoutWidget_3">
-      <property name="geometry">
-       <rect>
-        <x>110</x>
-        <y>180</y>
-        <width>261</width>
-        <height>52</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="pirme95Custom_cpuSupportsAvx_checkBox">
-         <property name="text">
-          <string>AVX</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QCheckBox" name="prime95Custom_cpuSupportsFma3_checkBox">
-         <property name="text">
-          <string>FMA3</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QCheckBox" name="prime95Custom_cpuSupportsAvx2_checkBox">
-         <property name="text">
-          <string>AVX2</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QCheckBox" name="prime95Custom_cpuSupportsAvx512_checkBox">
-         <property name="text">
-          <string>AVX512</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
      <widget class="QWidget" name="horizontalLayoutWidget_5">
       <property name="geometry">
        <rect>
         <x>70</x>
-        <y>240</y>
+        <y>290</y>
         <width>341</width>
         <height>31</height>
        </rect>
@@ -1015,7 +975,7 @@
       <property name="geometry">
        <rect>
         <x>70</x>
-        <y>290</y>
+        <y>330</y>
         <width>341</width>
         <height>31</height>
        </rect>
@@ -1050,7 +1010,7 @@
       <property name="geometry">
        <rect>
         <x>133</x>
-        <y>340</y>
+        <y>370</y>
         <width>232</width>
         <height>31</height>
        </rect>
@@ -1076,6 +1036,53 @@
          </property>
          <property name="minimum">
           <number>1</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="gridLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>180</y>
+        <width>161</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="1">
+        <widget class="QRadioButton" name="pirme95Custom_cpuSupportsAvx_radioButton">
+         <property name="text">
+          <string>AVX</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QRadioButton" name="prime95Custom_cpuSupportsSse_radioButton">
+         <property name="text">
+          <string>SSE</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QRadioButton" name="prime95Custom_cpuSupportsAvx2_radioButton">
+         <property name="text">
+          <string>AVX2</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QRadioButton" name="prime95Custom_cpuSupportsFma3_radioButton">
+         <property name="text">
+          <string>FMA3</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QRadioButton" name="prime95Custom_cpuSupportsAvx512_radioButton">
+         <property name="text">
+          <string>AVX512</string>
          </property>
         </widget>
        </item>

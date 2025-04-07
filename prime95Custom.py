@@ -14,11 +14,22 @@ def load_prime95_custom_config(ui):
     if 'Prime95Custom' in config:
         section = config['Prime95Custom']
         
-        # Load checkbox states (0 or 1 from config)
-        ui.pirme95Custom_cpuSupportsAvx_checkBox.setChecked(section.get('cpuSupportsAvx', '0') == '1')
-        ui.prime95Custom_cpuSupportsAvx2_checkBox.setChecked(section.get('cpuSupportsAvx2', '0') == '1')
-        ui.prime95Custom_cpuSupportsFma3_checkBox.setChecked(section.get('cpuSupportsFma3', '0') == '1')
-        ui.prime95Custom_cpuSupportsAvx512_checkBox.setChecked(section.get('cpuSupportsAvx512', '0') == '1')
+        # Determine which radio button to check based on the config values
+        cpu_supports_avx = section.get('cpuSupportsAvx', '0') == '1'
+        cpu_supports_avx2 = section.get('cpuSupportsAvx2', '0') == '1'
+        cpu_supports_fma3 = section.get('cpuSupportsFma3', '0') == '1'
+        cpu_supports_avx512 = section.get('cpuSupportsAvx512', '0') == '1'
+
+        if cpu_supports_avx512:
+            ui.prime95Custom_cpuSupportsAvx512_radioButton.setChecked(True)
+        elif cpu_supports_fma3:
+            ui.prime95Custom_cpuSupportsFma3_radioButton.setChecked(True)
+        elif cpu_supports_avx2:
+            ui.prime95Custom_cpuSupportsAvx2_radioButton.setChecked(True)
+        elif cpu_supports_avx:
+            ui.pirme95Custom_cpuSupportsAvx_radioButton.setChecked(True)
+        else:
+            ui.prime95Custom_cpuSupportsSse_radioButton.setChecked(True)
         
         # Load line edit texts with defaults
         ui.prime95Custom_minTortureFft_lineEdit.setText(section.get('minTortureFft', '4'))
@@ -32,11 +43,12 @@ def load_prime95_custom_config(ui):
             torture_time = 1  # Default to 1 if conversion fails
         ui.prime95Custom_tortureTime_spinBox.setValue(torture_time)
     else:
-        # If section is missing, set default values in the GUI
-        ui.pirme95Custom_cpuSupportsAvx_checkBox.setChecked(False)
-        ui.prime95Custom_cpuSupportsAvx2_checkBox.setChecked(False)
-        ui.prime95Custom_cpuSupportsFma3_checkBox.setChecked(False)
-        ui.prime95Custom_cpuSupportsAvx512_checkBox.setChecked(False)
+        # If section is missing, set default values in the GUI (SSE as default)
+        ui.prime95Custom_cpuSupportsSse_radioButton.setChecked(True)
+        ui.pirme95Custom_cpuSupportsAvx_radioButton.setChecked(False)
+        ui.prime95Custom_cpuSupportsAvx2_radioButton.setChecked(False)
+        ui.prime95Custom_cpuSupportsFma3_radioButton.setChecked(False)
+        ui.prime95Custom_cpuSupportsAvx512_radioButton.setChecked(False)
         ui.prime95Custom_minTortureFft_lineEdit.setText('4')
         ui.prime95Custom_maxTortureFft_lineEdit.setText('1344')
         ui.prime95Custom_tortureMem_lineEdit.setText('0')
@@ -58,11 +70,32 @@ def apply_prime95_custom_config(ui):
     
     section = config['Prime95Custom']
     
-    # Save checkbox states as '0' or '1'
-    section['cpuSupportsAvx'] = '1' if ui.pirme95Custom_cpuSupportsAvx_checkBox.isChecked() else '0'
-    section['cpuSupportsAvx2'] = '1' if ui.prime95Custom_cpuSupportsAvx2_checkBox.isChecked() else '0'
-    section['cpuSupportsFma3'] = '1' if ui.prime95Custom_cpuSupportsFma3_checkBox.isChecked() else '0'
-    section['cpuSupportsAvx512'] = '1' if ui.prime95Custom_cpuSupportsAvx512_checkBox.isChecked() else '0'
+    # Set CPU support settings based on the selected radio button
+    if ui.prime95Custom_cpuSupportsSse_radioButton.isChecked():
+        section['cpuSupportsAvx'] = '0'
+        section['cpuSupportsAvx2'] = '0'
+        section['cpuSupportsFma3'] = '0'
+        section['cpuSupportsAvx512'] = '0'
+    elif ui.pirme95Custom_cpuSupportsAvx_radioButton.isChecked():
+        section['cpuSupportsAvx'] = '1'
+        section['cpuSupportsAvx2'] = '0'
+        section['cpuSupportsFma3'] = '0'
+        section['cpuSupportsAvx512'] = '0'
+    elif ui.prime95Custom_cpuSupportsAvx2_radioButton.isChecked():
+        section['cpuSupportsAvx'] = '1'
+        section['cpuSupportsAvx2'] = '1'
+        section['cpuSupportsFma3'] = '0'
+        section['cpuSupportsAvx512'] = '0'
+    elif ui.prime95Custom_cpuSupportsFma3_radioButton.isChecked():
+        section['cpuSupportsAvx'] = '1'
+        section['cpuSupportsAvx2'] = '1'
+        section['cpuSupportsFma3'] = '1'
+        section['cpuSupportsAvx512'] = '0'
+    elif ui.prime95Custom_cpuSupportsAvx512_radioButton.isChecked():
+        section['cpuSupportsAvx'] = '1'
+        section['cpuSupportsAvx2'] = '1'
+        section['cpuSupportsFma3'] = '1'
+        section['cpuSupportsAvx512'] = '1'
     
     # Save line edit texts directly
     section['minTortureFft'] = ui.prime95Custom_minTortureFft_lineEdit.text()
